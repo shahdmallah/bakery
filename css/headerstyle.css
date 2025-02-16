@@ -1,0 +1,255 @@
+:root {
+    --soft-purple: #e7cbef;
+    --soft-green: #bae8d4;
+    --soft-pink: #ffc8ca;
+    --soft-yellow: #ffdead;
+    --white: #f3f1ee;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    background-color: var(--white);
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--white);
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.headerCont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.logo {
+    position: fixed;
+    top: 5%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    max-width: 150px;
+    height: auto;
+    z-index: 100;
+}
+
+.logo img {
+    max-width: 350px;
+    height: auto;
+}
+
+.navigation {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.navigation ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 20px;
+}
+
+.navigation li {
+    position: relative;
+}
+
+.navigation a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 5px 10px;
+}
+
+.navigation a:hover {
+    color: var(--soft-pink);
+}
+
+.navigation .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--white);
+    border: 1px solid #ddd;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    min-width: 150px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navigation .dropdown li {
+    margin: 0;
+}
+
+.navigation .dropdown a {
+    display: block;
+    padding: 5px 15px;
+    color: #333;
+}
+
+.navigation li:hover .dropdown {
+    display: block;
+}
+
+.icons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.icons a {
+    display: block;
+}
+
+.icons a img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    margin: 0;
+}
+
+.icons a img:hover {
+    transform: scale(1.1);
+}
+
+.image-container {
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    margin-top: 100px; /* Ensure space for the fixed header */
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.text-overlay {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 2em;
+    padding: 20px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+.cta-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--soft-pink);
+    border-radius: 5px;
+    border: 2px solid white;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cta-button:hover {
+    background-color: #e29fa1;
+    transform: scale(1.05);
+}
+
+.product-info {
+    margin-top: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+.product-info h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.product-info p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.column {
+    flex: 1;
+    min-width: 200px;
+}
+
+.column img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.2s ease;
+}
+
+.column img:hover {
+    transform: scale(1.05);
+}
+
+figcaption {
+    margin-top: 10px;
+}
+
+.view-button {
+    color: var(--soft-pink);
+}
+
+.image-container2 {
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.image-container2 img {
+    width: 100%;
+    height: auto;
+}
+
+.text-overlay2 {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    text-align: center;
+    width: 90%;
+}
+
+.text-overlay2 h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.text-overlay2 p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}

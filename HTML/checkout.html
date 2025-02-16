@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="../css/orderstyle.css">
+</head>
+
+<body>
+<div id="header-container"></div>
+
+<div class="checkout-container">
+
+    <h2>YOUR CART ITEMS</h2>
+    <div id="cart-summary" class="cart-items"></div>
+    <p class="total-price" id="total-price">Total: $0.00</p>
+
+    <!-- New Buttons -->
+    <div class="checkout-buttons">
+        <button id="continue-shopping-btn" class="secondary-button">Continue Shopping</button>
+        <button id="discard-cart-btn" class="secondary-button">Discard Cart</button>
+    </div>
+
+    <h2>DELIVERY DETAILS</h2>
+    <form id="checkout-form">
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" placeholder="Enter your address" required></textarea>
+
+        <label for="order-note">Order Note:</label>
+        <textarea id="order-note" name="orderNote" placeholder="Optional: Add special instructions for your order"></textarea>
+
+        <!-- Delivery Date Input -->
+        <label for="delivery-date">Delivery Date:</label>
+        <input type="date" id="delivery-date" name="deliveryDate" required>
+
+        <button type="button" class="checkout-button" onclick="completeOrder()">Place Order</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Fetch header
+        fetch("http://localhost/Bakery/php/header.php")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById("header-container").innerHTML = html;
+            })
+            .catch(error => {
+                console.error("Error loading header:", error);
+            });
+
+        // Retrieve cart data from localStorage
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // Check if the cart is empty
+        if (cart.length === 0) {
+            document.querySelector(".checkout-container").innerHTML = "<p>Your cart is empty.</p>";
+            return;
+        }
+
+        // Render cart
+        const cartItemsContainer = document.getElementById("cart-summary");
+        const totalPriceEl = document.getElementById("total-price");
+        let total = 0;
+
+        cart.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "cart-item";
+            div.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h4>${item.name}</h4>
+                    <p>Price: $${item.price.toFixed(2)}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                    <p>Subtotal: $${(item.price * item.quantity).toFixed(2)}</p>
+                </div>
+            `;
+            cartItemsContainer.appendChild(div);
+            total += item.price * item.quantity;
+        });
+
+        totalPriceEl.textContent = `Total: $${total.toFixed(2)}`;
+
+        // Add event listeners for buttons
+        document.getElementById("continue-shopping-btn").addEventListener("click", () => {
+            window.location.href = "order.html";
+        });
+
+        document.getElementById("discard-cart-btn").addEventListener("click", () => {
+            const confirmDiscard = confirm("Are you sure you want to discard your cart?");
+            if (confirmDiscard) {
+                localStorage.removeItem("cart");
+                alert("Your cart has been discarded.");
+                window.location.href = "order.html";
+            }
+        });
+
+        // Set minimum delivery date to one week from today
+        const deliveryDateInput = document.getElementById("delivery-date");
+        const today = new Date();
+        const oneWeekFromToday = new Date(today.setDate(today.getDate() + 7));
+        const minDate = oneWeekFromToday.toISOString().split("T")[0];
+        deliveryDateInput.setAttribute("min", minDate);
+    });
+
+    function completeOrder() {
+        // Retrieve cart data from localStorage
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (cart.length === 0) {
+            alert("Your cart is empty. Please add some items before checking out.");
+            return;
+        }
+
+        // Retrieve input values
+        const address = document.getElementById("address").value.trim();
+        const orderNote = document.getElementById("order-note").value.trim();
+        const deliveryDate = document.getElementById("delivery-date").value;
+
+        // Validate input values
+        if (!address) {
+            alert("Please enter your address to proceed.");
+            return;
+        }
+        if (!deliveryDate) {
+            alert("Please select a delivery date.");
+            return;
+        }
+
+        // Prepare the order details object
+        const total = parseFloat(
+            document.getElementById("total-price").textContent.replace("Total: $", "")
+        );
+        const orderDetails = {
+            address,
+            orderNote,
+            deliveryDate,
+            total,
+            cart: cart.map(item => ({
+                product_id: item.product_id,
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+            })),
+        };
+
+        // Send data to the backend
+        fetch("http://localhost/Bakery/php/save_order.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderDetails),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert("Order placed successfully! Order ID: " + data.data.order_id);
+                    localStorage.removeItem("cart"); // Clear the cart data
+                    window.location.href = "../php/page1.php"; // Redirect to the main page
+                } else {
+                    alert("Failed to place order: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while placing your order.");
+            });
+    }
+
+
+</script>
+</body>
+</html>

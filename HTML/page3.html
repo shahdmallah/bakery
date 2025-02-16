@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account</title>
+  <link rel="stylesheet" href="../css/headerstyle.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ecc7cd;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      padding: 120px 40px 40px;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .form-section {
+      width: 50%;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-section h1 {
+      font-size: 28px;
+      color: #1f1f1f;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-section label {
+      font-size: 14px;
+      color: #5f5f5f;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-section input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .form-section button {
+      width: 100%;
+      background-color: #f3f1ee;
+      color: #333;
+      border: none;
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .form-section button:hover {
+      background-color: #e29fa1;
+      color: #f3f1ee;
+    }
+
+    .form-section p {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .form-section p a {
+      color: #5f5f5f;
+      text-decoration: underline;
+    }
+
+    .image-section {
+      width: 45%;
+    }
+
+    .image-section img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    #header-container {
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+<div id="header-container"></div>
+
+<div class="container">
+  <div class="form-section">
+    <h1>Create Account</h1>
+    <form action="../php/signup.php" method="POST">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Email" required>
+
+      <label for="birthday">Birthday</label>
+      <input type="date" id="birthday" name="birthday" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+
+      <button type="submit" >Create</button>
+    </form>
+
+    <p>If you already have an account, <a href="page2.html">log in here</a></p>
+  </div>
+
+  <div class="image-section">
+    <img src="../images/signup.jpg" alt="Bakery Image">
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("http://localhost/Bakery/php/header.php")
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.text();
+            })
+            .then(html => {
+              document.getElementById("header-container").innerHTML = html;
+            })
+            .catch(error => {
+              console.error("Error loading header:", error);
+            });
+
+    // Handle form submission
+    const form = document.querySelector("form");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault(); // Prevent default submission temporarily
+      const formData = new FormData(form);
+
+      fetch("../php/signup.php", {
+        method: "POST",
+        body: formData,
+      })
+              .then((response) => {
+                if (response.ok) {
+                  alert("Account created successfully! Redirecting...");
+                  window.location.href = "../php/page1.php"; // Redirect to home page
+                } else {
+                  alert("Error creating account. Please try again.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("A network error occurred. Please try again.");
+              });
+    });
+
+
+  });
+</script>
+
+
+</body>
+</html>
